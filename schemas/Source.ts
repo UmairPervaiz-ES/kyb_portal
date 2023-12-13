@@ -1,4 +1,3 @@
-import { allowAll, denyAll } from '@keystone-6/core/access'
 import { text, checkbox, timestamp, select, relationship } from '@keystone-6/core/fields'
 import { hasSession, isAdmin, isNotAdmin } from '../currentUser'
   
@@ -15,6 +14,21 @@ const sourceSchema = {
         authority_name: text({ validation: { isRequired: true } }),
         comment: text({ validation: { isRequired: true } }),
         cost: text({ validation: { isRequired: true } }),
+
+        source_key: relationship({
+            ref: 'SourceKey',
+            many: true,
+            ui: {
+                hideCreate: false,
+                displayMode: 'cards',
+                cardFields: ['original_key', 'map_to'],
+                linkToItem: true,
+                removeMode: 'disconnect',
+                inlineCreate: { fields: ['original_key', 'map_to'] },
+                inlineEdit: { fields: ['original_key', 'map_to'] },
+                inlineConnect: true,
+            }
+        }),
 
         coverage: relationship({
             ref: 'Coverage',
@@ -147,6 +161,7 @@ const sourceSchema = {
 
     ui: {
       listView: {
+        initialColumns: ['authority_name', 'comment', 'to_crawler', 'to_deo', 'country', 'region'],
         initialSort: { field: 'createdAt', direction: 'DESC' },
         pageSize: 10
       }

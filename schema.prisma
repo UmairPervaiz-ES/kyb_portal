@@ -55,6 +55,7 @@ model Source {
   authority_name String      @default("")
   comment        String      @default("")
   cost           String      @default("")
+  source_key     SourceKey[] @relation("Source_source_key")
   coverage       Coverage?   @relation("Source_coverage", fields: [coverageId], references: [id])
   coverageId     String?     @map("coverage")
   type           Type?       @relation("Source_type", fields: [typeId], references: [id])
@@ -104,4 +105,12 @@ model Sourced {
   name                String    @default("")
   createdAt           DateTime? @default(now())
   from_Source_sourced Source[]  @relation("Source_sourced")
+}
+
+model SourceKey {
+  id                     String    @id @default(cuid())
+  original_key           String    @default("")
+  map_to                 String    @default("")
+  createdAt              DateTime? @default(now())
+  from_Source_source_key Source[]  @relation("Source_source_key")
 }

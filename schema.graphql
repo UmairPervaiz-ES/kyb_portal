@@ -297,6 +297,8 @@ type Source {
   authority_name: String
   comment: String
   cost: String
+  source_key(where: SourceKeyWhereInput! = {}, orderBy: [SourceKeyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SourceKeyWhereUniqueInput): [SourceKey!]
+  source_keyCount(where: SourceKeyWhereInput! = {}): Int
   coverage: Coverage
   type: Type
   sourced: Sourced
@@ -322,6 +324,7 @@ input SourceWhereInput {
   authority_name: StringFilter
   comment: StringFilter
   cost: StringFilter
+  source_key: SourceKeyManyRelationFilter
   coverage: CoverageWhereInput
   type: TypeWhereInput
   sourced: SourcedWhereInput
@@ -333,6 +336,12 @@ input SourceWhereInput {
   source_type: SourceTypeWhereInput
   lanaguage: LanguageWhereInput
   createdBy: UserWhereInput
+}
+
+input SourceKeyManyRelationFilter {
+  every: SourceKeyWhereInput
+  some: SourceKeyWhereInput
+  none: SourceKeyWhereInput
 }
 
 input SourceOrderByInput {
@@ -349,6 +358,7 @@ input SourceUpdateInput {
   authority_name: String
   comment: String
   cost: String
+  source_key: SourceKeyRelateToManyForUpdateInput
   coverage: CoverageRelateToOneForUpdateInput
   type: TypeRelateToOneForUpdateInput
   sourced: SourcedRelateToOneForUpdateInput
@@ -360,6 +370,13 @@ input SourceUpdateInput {
   source_type: SourceTypeRelateToOneForUpdateInput
   lanaguage: LanguageRelateToOneForUpdateInput
   createdBy: UserRelateToOneForUpdateInput
+}
+
+input SourceKeyRelateToManyForUpdateInput {
+  disconnect: [SourceKeyWhereUniqueInput!]
+  set: [SourceKeyWhereUniqueInput!]
+  create: [SourceKeyCreateInput!]
+  connect: [SourceKeyWhereUniqueInput!]
 }
 
 input CoverageRelateToOneForUpdateInput {
@@ -419,6 +436,7 @@ input SourceCreateInput {
   authority_name: String
   comment: String
   cost: String
+  source_key: SourceKeyRelateToManyForCreateInput
   coverage: CoverageRelateToOneForCreateInput
   type: TypeRelateToOneForCreateInput
   sourced: SourcedRelateToOneForCreateInput
@@ -430,6 +448,11 @@ input SourceCreateInput {
   source_type: SourceTypeRelateToOneForCreateInput
   lanaguage: LanguageRelateToOneForCreateInput
   createdBy: UserRelateToOneForCreateInput
+}
+
+input SourceKeyRelateToManyForCreateInput {
+  create: [SourceKeyCreateInput!]
+  connect: [SourceKeyWhereUniqueInput!]
 }
 
 input CoverageRelateToOneForCreateInput {
@@ -592,6 +615,51 @@ input SourcedCreateInput {
   createdAt: DateTime
 }
 
+type SourceKey {
+  id: ID!
+  original_key: String
+  map_to: String
+  createdAt: DateTime
+}
+
+input SourceKeyWhereUniqueInput {
+  id: ID
+}
+
+input SourceKeyWhereInput {
+  AND: [SourceKeyWhereInput!]
+  OR: [SourceKeyWhereInput!]
+  NOT: [SourceKeyWhereInput!]
+  id: IDFilter
+  original_key: StringFilter
+  map_to: StringFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input SourceKeyOrderByInput {
+  id: OrderDirection
+  original_key: OrderDirection
+  map_to: OrderDirection
+  createdAt: OrderDirection
+}
+
+input SourceKeyUpdateInput {
+  original_key: String
+  map_to: String
+  createdAt: DateTime
+}
+
+input SourceKeyUpdateArgs {
+  where: SourceKeyWhereUniqueInput!
+  data: SourceKeyUpdateInput!
+}
+
+input SourceKeyCreateInput {
+  original_key: String
+  map_to: String
+  createdAt: DateTime
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -652,6 +720,12 @@ type Mutation {
   updateSourceds(data: [SourcedUpdateArgs!]!): [Sourced]
   deleteSourced(where: SourcedWhereUniqueInput!): Sourced
   deleteSourceds(where: [SourcedWhereUniqueInput!]!): [Sourced]
+  createSourceKey(data: SourceKeyCreateInput!): SourceKey
+  createSourceKeys(data: [SourceKeyCreateInput!]!): [SourceKey]
+  updateSourceKey(where: SourceKeyWhereUniqueInput!, data: SourceKeyUpdateInput!): SourceKey
+  updateSourceKeys(data: [SourceKeyUpdateArgs!]!): [SourceKey]
+  deleteSourceKey(where: SourceKeyWhereUniqueInput!): SourceKey
+  deleteSourceKeys(where: [SourceKeyWhereUniqueInput!]!): [SourceKey]
   endSession: Boolean!
   authenticateUserWithPassword(email: String!, password: String!): UserAuthenticationWithPasswordResult
   createInitialUser(data: CreateInitialUserInput!): UserAuthenticationWithPasswordSuccess!
@@ -702,6 +776,9 @@ type Query {
   sourceds(where: SourcedWhereInput! = {}, orderBy: [SourcedOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SourcedWhereUniqueInput): [Sourced!]
   sourced(where: SourcedWhereUniqueInput!): Sourced
   sourcedsCount(where: SourcedWhereInput! = {}): Int
+  sourceKeys(where: SourceKeyWhereInput! = {}, orderBy: [SourceKeyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SourceKeyWhereUniqueInput): [SourceKey!]
+  sourceKey(where: SourceKeyWhereUniqueInput!): SourceKey
+  sourceKeysCount(where: SourceKeyWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }
