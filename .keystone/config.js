@@ -134,7 +134,11 @@ var userSchema = {
     })
   },
   ui: {
-    isHidden: isNotAdmin
+    isHidden: isNotAdmin,
+    listView: {
+      initialSort: { field: "createdAt", direction: "DESC" },
+      pageSize: 10
+    }
   }
 };
 var User_default = userSchema;
@@ -156,7 +160,11 @@ var sourceTypeSchema = {
     })
   },
   ui: {
-    isHidden: isNotAdmin
+    isHidden: isNotAdmin,
+    listView: {
+      initialSort: { field: "createdAt", direction: "DESC" },
+      pageSize: 10
+    }
   }
 };
 var SourceType_default = sourceTypeSchema;
@@ -178,7 +186,11 @@ var regionSchema = {
     })
   },
   ui: {
-    isHidden: isNotAdmin
+    isHidden: isNotAdmin,
+    listView: {
+      initialSort: { field: "createdAt", direction: "DESC" },
+      pageSize: 10
+    }
   }
 };
 var Region_default = regionSchema;
@@ -199,20 +211,12 @@ var languageSchema = {
       }
     })
   },
-  // ui: {
-  //     views: '/.keystone/admin/pages/languages',
-  //     createView: {
-  //       fieldMode: ({ session, context }) => 'hidden',
-  //     },
-  //     itemView: {
-  //       fieldMode: ({ session, context, item }) => 'read',
-  //     },
-  //     listView: {
-  //       fieldMode: ({ session, context }) => 'read',
-  //     },
-  //   },
   ui: {
-    isHidden: isNotAdmin
+    isHidden: isNotAdmin,
+    listView: {
+      initialSort: { field: "createdAt", direction: "DESC" },
+      pageSize: 10
+    }
   }
 };
 var Language_default = languageSchema;
@@ -233,7 +237,11 @@ var countrySchema = {
     })
   },
   ui: {
-    isHidden: isNotAdmin
+    isHidden: isNotAdmin,
+    listView: {
+      initialSort: { field: "createdAt", direction: "DESC" },
+      pageSize: 10
+    }
   }
 };
 var Country_default = countrySchema;
@@ -368,6 +376,12 @@ var sourceSchema = {
         }
       }
     })
+  },
+  ui: {
+    listView: {
+      initialSort: { field: "createdAt", direction: "DESC" },
+      pageSize: 10
+    }
   }
 };
 var Source_default = sourceSchema;
@@ -396,7 +410,11 @@ var coverageSchema = {
     })
   },
   ui: {
-    isHidden: isNotAdmin
+    isHidden: isNotAdmin,
+    listView: {
+      initialSort: { field: "createdAt", direction: "DESC" },
+      pageSize: 10
+    }
   }
 };
 var Coverage_default = coverageSchema;
@@ -425,7 +443,11 @@ var typeSchema = {
     })
   },
   ui: {
-    isHidden: isNotAdmin
+    isHidden: isNotAdmin,
+    listView: {
+      initialSort: { field: "createdAt", direction: "DESC" },
+      pageSize: 10
+    }
   }
 };
 var Type_default = typeSchema;
@@ -454,7 +476,11 @@ var sourcedSchema = {
     })
   },
   ui: {
-    isHidden: isNotAdmin
+    isHidden: isNotAdmin,
+    listView: {
+      initialSort: { field: "createdAt", direction: "DESC" },
+      pageSize: 10
+    }
   }
 };
 var Sourced_default = sourcedSchema;

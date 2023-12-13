@@ -144,6 +144,13 @@ const sourceSchema = {
         }),
         
     },
+
+    ui: {
+      listView: {
+        initialSort: { field: 'createdAt', direction: 'DESC' },
+        pageSize: 10
+      }
+    }
 }
 
 export default sourceSchema;

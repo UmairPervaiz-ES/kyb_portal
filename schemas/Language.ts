@@ -16,21 +16,13 @@ const languageSchema = {
             },
         }),
     },
-    // ui: {
-    //     views: '/.keystone/admin/pages/languages',
-    //     createView: {
-    //       fieldMode: ({ session, context }) => 'hidden',
-    //     },
-    //     itemView: {
-    //       fieldMode: ({ session, context, item }) => 'read',
-    //     },
-    //     listView: {
-    //       fieldMode: ({ session, context }) => 'read',
-    //     },
-    //   },
     
     ui: {
-      isHidden: isNotAdmin
+      isHidden: isNotAdmin,
+      listView: {
+        initialSort: { field: 'createdAt', direction: 'DESC' },
+        pageSize: 10
+      }
     }
 }
 

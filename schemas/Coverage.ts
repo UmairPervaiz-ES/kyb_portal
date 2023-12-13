@@ -25,7 +25,11 @@ const coverageSchema = {
     },
     
     ui: {
-      isHidden: isNotAdmin
+      isHidden: isNotAdmin,
+      listView: {
+        initialSort: { field: 'createdAt', direction: 'DESC' },
+        pageSize: 10
+      }
     }
 }
 
