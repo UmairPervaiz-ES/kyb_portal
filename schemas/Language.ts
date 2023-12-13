@@ -9,6 +9,11 @@ const languageSchema = {
         createdAt: timestamp({
             defaultValue: { kind: 'now' }, 
             validation: { isRequired: false },
+            ui: {
+                createView: {
+                    fieldMode: 'hidden'
+                }
+            },
         }),
     },
     // ui: {

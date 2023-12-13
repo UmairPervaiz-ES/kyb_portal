@@ -7,8 +7,7 @@ type User {
   email: String
   password: PasswordState
   isAdmin: Boolean
-  sources(where: SourceWhereInput! = {}, orderBy: [SourceOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SourceWhereUniqueInput): [Source!]
-  sourcesCount(where: SourceWhereInput! = {}): Int
+  isSuperAdmin: Boolean
   createdAt: DateTime
 }
 
@@ -31,7 +30,7 @@ input UserWhereInput {
   name: StringFilter
   email: StringFilter
   isAdmin: BooleanFilter
-  sources: SourceManyRelationFilter
+  isSuperAdmin: BooleanFilter
   createdAt: DateTimeNullableFilter
 }
 
@@ -85,12 +84,6 @@ input BooleanFilter {
   not: BooleanFilter
 }
 
-input SourceManyRelationFilter {
-  every: SourceWhereInput
-  some: SourceWhereInput
-  none: SourceWhereInput
-}
-
 input DateTimeNullableFilter {
   equals: DateTime
   in: [DateTime!]
@@ -107,6 +100,7 @@ input UserOrderByInput {
   name: OrderDirection
   email: OrderDirection
   isAdmin: OrderDirection
+  isSuperAdmin: OrderDirection
   createdAt: OrderDirection
 }
 
@@ -120,15 +114,8 @@ input UserUpdateInput {
   email: String
   password: String
   isAdmin: Boolean
-  sources: SourceRelateToManyForUpdateInput
+  isSuperAdmin: Boolean
   createdAt: DateTime
-}
-
-input SourceRelateToManyForUpdateInput {
-  disconnect: [SourceWhereUniqueInput!]
-  set: [SourceWhereUniqueInput!]
-  create: [SourceCreateInput!]
-  connect: [SourceWhereUniqueInput!]
 }
 
 input UserUpdateArgs {
@@ -141,13 +128,8 @@ input UserCreateInput {
   email: String
   password: String
   isAdmin: Boolean
-  sources: SourceRelateToManyForCreateInput
+  isSuperAdmin: Boolean
   createdAt: DateTime
-}
-
-input SourceRelateToManyForCreateInput {
-  create: [SourceCreateInput!]
-  connect: [SourceWhereUniqueInput!]
 }
 
 type SourceType {
@@ -314,6 +296,10 @@ type Source {
   id: ID!
   authority_name: String
   comment: String
+  cost: String
+  coverage: Coverage
+  type: Type
+  sourced: Sourced
   createdAt: DateTime
   to_crawler: Boolean
   to_deo: Boolean
@@ -335,6 +321,10 @@ input SourceWhereInput {
   id: IDFilter
   authority_name: StringFilter
   comment: StringFilter
+  cost: StringFilter
+  coverage: CoverageWhereInput
+  type: TypeWhereInput
+  sourced: SourcedWhereInput
   createdAt: DateTimeNullableFilter
   to_crawler: BooleanFilter
   to_deo: BooleanFilter
@@ -349,6 +339,7 @@ input SourceOrderByInput {
   id: OrderDirection
   authority_name: OrderDirection
   comment: OrderDirection
+  cost: OrderDirection
   createdAt: OrderDirection
   to_crawler: OrderDirection
   to_deo: OrderDirection
@@ -357,6 +348,10 @@ input SourceOrderByInput {
 input SourceUpdateInput {
   authority_name: String
   comment: String
+  cost: String
+  coverage: CoverageRelateToOneForUpdateInput
+  type: TypeRelateToOneForUpdateInput
+  sourced: SourcedRelateToOneForUpdateInput
   createdAt: DateTime
   to_crawler: Boolean
   to_deo: Boolean
@@ -365,6 +360,24 @@ input SourceUpdateInput {
   source_type: SourceTypeRelateToOneForUpdateInput
   lanaguage: LanguageRelateToOneForUpdateInput
   createdBy: UserRelateToOneForUpdateInput
+}
+
+input CoverageRelateToOneForUpdateInput {
+  create: CoverageCreateInput
+  connect: CoverageWhereUniqueInput
+  disconnect: Boolean
+}
+
+input TypeRelateToOneForUpdateInput {
+  create: TypeCreateInput
+  connect: TypeWhereUniqueInput
+  disconnect: Boolean
+}
+
+input SourcedRelateToOneForUpdateInput {
+  create: SourcedCreateInput
+  connect: SourcedWhereUniqueInput
+  disconnect: Boolean
 }
 
 input CountryRelateToOneForUpdateInput {
@@ -405,6 +418,10 @@ input SourceUpdateArgs {
 input SourceCreateInput {
   authority_name: String
   comment: String
+  cost: String
+  coverage: CoverageRelateToOneForCreateInput
+  type: TypeRelateToOneForCreateInput
+  sourced: SourcedRelateToOneForCreateInput
   createdAt: DateTime
   to_crawler: Boolean
   to_deo: Boolean! = false
@@ -413,6 +430,21 @@ input SourceCreateInput {
   source_type: SourceTypeRelateToOneForCreateInput
   lanaguage: LanguageRelateToOneForCreateInput
   createdBy: UserRelateToOneForCreateInput
+}
+
+input CoverageRelateToOneForCreateInput {
+  create: CoverageCreateInput
+  connect: CoverageWhereUniqueInput
+}
+
+input TypeRelateToOneForCreateInput {
+  create: TypeCreateInput
+  connect: TypeWhereUniqueInput
+}
+
+input SourcedRelateToOneForCreateInput {
+  create: SourcedCreateInput
+  connect: SourcedWhereUniqueInput
 }
 
 input CountryRelateToOneForCreateInput {
@@ -438,6 +470,126 @@ input LanguageRelateToOneForCreateInput {
 input UserRelateToOneForCreateInput {
   create: UserCreateInput
   connect: UserWhereUniqueInput
+}
+
+type Coverage {
+  id: ID!
+  name: String
+  createdAt: DateTime
+}
+
+input CoverageWhereUniqueInput {
+  id: ID
+}
+
+input CoverageWhereInput {
+  AND: [CoverageWhereInput!]
+  OR: [CoverageWhereInput!]
+  NOT: [CoverageWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input CoverageOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  createdAt: OrderDirection
+}
+
+input CoverageUpdateInput {
+  name: String
+  createdAt: DateTime
+}
+
+input CoverageUpdateArgs {
+  where: CoverageWhereUniqueInput!
+  data: CoverageUpdateInput!
+}
+
+input CoverageCreateInput {
+  name: String
+  createdAt: DateTime
+}
+
+type Type {
+  id: ID!
+  name: String
+  createdAt: DateTime
+}
+
+input TypeWhereUniqueInput {
+  id: ID
+}
+
+input TypeWhereInput {
+  AND: [TypeWhereInput!]
+  OR: [TypeWhereInput!]
+  NOT: [TypeWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input TypeOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  createdAt: OrderDirection
+}
+
+input TypeUpdateInput {
+  name: String
+  createdAt: DateTime
+}
+
+input TypeUpdateArgs {
+  where: TypeWhereUniqueInput!
+  data: TypeUpdateInput!
+}
+
+input TypeCreateInput {
+  name: String
+  createdAt: DateTime
+}
+
+type Sourced {
+  id: ID!
+  name: String
+  createdAt: DateTime
+}
+
+input SourcedWhereUniqueInput {
+  id: ID
+}
+
+input SourcedWhereInput {
+  AND: [SourcedWhereInput!]
+  OR: [SourcedWhereInput!]
+  NOT: [SourcedWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input SourcedOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  createdAt: OrderDirection
+}
+
+input SourcedUpdateInput {
+  name: String
+  createdAt: DateTime
+}
+
+input SourcedUpdateArgs {
+  where: SourcedWhereUniqueInput!
+  data: SourcedUpdateInput!
+}
+
+input SourcedCreateInput {
+  name: String
+  createdAt: DateTime
 }
 
 """
@@ -482,6 +634,24 @@ type Mutation {
   updateSources(data: [SourceUpdateArgs!]!): [Source]
   deleteSource(where: SourceWhereUniqueInput!): Source
   deleteSources(where: [SourceWhereUniqueInput!]!): [Source]
+  createCoverage(data: CoverageCreateInput!): Coverage
+  createCoverages(data: [CoverageCreateInput!]!): [Coverage]
+  updateCoverage(where: CoverageWhereUniqueInput!, data: CoverageUpdateInput!): Coverage
+  updateCoverages(data: [CoverageUpdateArgs!]!): [Coverage]
+  deleteCoverage(where: CoverageWhereUniqueInput!): Coverage
+  deleteCoverages(where: [CoverageWhereUniqueInput!]!): [Coverage]
+  createType(data: TypeCreateInput!): Type
+  createTypes(data: [TypeCreateInput!]!): [Type]
+  updateType(where: TypeWhereUniqueInput!, data: TypeUpdateInput!): Type
+  updateTypes(data: [TypeUpdateArgs!]!): [Type]
+  deleteType(where: TypeWhereUniqueInput!): Type
+  deleteTypes(where: [TypeWhereUniqueInput!]!): [Type]
+  createSourced(data: SourcedCreateInput!): Sourced
+  createSourceds(data: [SourcedCreateInput!]!): [Sourced]
+  updateSourced(where: SourcedWhereUniqueInput!, data: SourcedUpdateInput!): Sourced
+  updateSourceds(data: [SourcedUpdateArgs!]!): [Sourced]
+  deleteSourced(where: SourcedWhereUniqueInput!): Sourced
+  deleteSourceds(where: [SourcedWhereUniqueInput!]!): [Sourced]
   endSession: Boolean!
   authenticateUserWithPassword(email: String!, password: String!): UserAuthenticationWithPasswordResult
   createInitialUser(data: CreateInitialUserInput!): UserAuthenticationWithPasswordSuccess!
@@ -523,6 +693,15 @@ type Query {
   sources(where: SourceWhereInput! = {}, orderBy: [SourceOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SourceWhereUniqueInput): [Source!]
   source(where: SourceWhereUniqueInput!): Source
   sourcesCount(where: SourceWhereInput! = {}): Int
+  coverages(where: CoverageWhereInput! = {}, orderBy: [CoverageOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: CoverageWhereUniqueInput): [Coverage!]
+  coverage(where: CoverageWhereUniqueInput!): Coverage
+  coveragesCount(where: CoverageWhereInput! = {}): Int
+  types(where: TypeWhereInput! = {}, orderBy: [TypeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TypeWhereUniqueInput): [Type!]
+  type(where: TypeWhereUniqueInput!): Type
+  typesCount(where: TypeWhereInput! = {}): Int
+  sourceds(where: SourcedWhereInput! = {}, orderBy: [SourcedOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SourcedWhereUniqueInput): [Sourced!]
+  sourced(where: SourcedWhereUniqueInput!): Sourced
+  sourcedsCount(where: SourcedWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }

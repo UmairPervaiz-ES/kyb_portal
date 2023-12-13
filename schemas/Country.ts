@@ -8,6 +8,11 @@ const countrySchema = {
         name: text({ validation: { isRequired: true } }),
         createdAt: timestamp({
             defaultValue: { kind: 'now' },
+            ui: {
+                createView: {
+                    fieldMode: 'hidden'
+                }
+            },
         }),
     },
     ui: {

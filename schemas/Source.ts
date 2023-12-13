@@ -1,6 +1,6 @@
 import { allowAll, denyAll } from '@keystone-6/core/access'
 import { text, checkbox, timestamp, select, relationship } from '@keystone-6/core/fields'
-import { isAdmin, isNotAdmin, isAdminAndisNotDefaultAdminUser, currentUserID } from '../currentUser'
+import { isAdmin, isNotAdmin } from '../currentUser'
   
 const sourceSchema = {
     access: {
@@ -8,15 +8,52 @@ const sourceSchema = {
             query: allowAll,
             create: allowAll,
             update: allowAll,
-            delete: allowAll
+            delete: isAdmin
         }
     },
     fields: {
         authority_name: text({ validation: { isRequired: true } }),
         comment: text({ validation: { isRequired: true } }),
+        cost: text({ validation: { isRequired: true } }),
+
+        coverage: relationship({
+            ref: 'Coverage',
+            many: false,
+            db: {
+                foreignKey: {
+                    map:'coverage'
+                }
+            }
+        }),
+
+        type: relationship({
+            ref: 'Type',
+            many: false,
+            db: {
+                foreignKey: {
+                    map:'type'
+                }
+            }
+        }),
+
+        sourced: relationship({
+            ref: 'Sourced',
+            many: false,
+            db: {
+                foreignKey: {
+                    map:'sourced'
+                }
+            }
+        }),
+
         createdAt: timestamp({
             // default this timestamp to Date.now() when first created
             defaultValue: { kind: 'now' },
+            ui: {
+                createView: {
+                    fieldMode: 'hidden'
+                }
+            },
         }),
 
         to_crawler: checkbox({
@@ -43,6 +80,7 @@ const sourceSchema = {
                 },
             },
         }),
+
         region: relationship({
             ref: 'Region',
             many: false,
@@ -62,6 +100,7 @@ const sourceSchema = {
                 },
             },
         }),
+
         lanaguage: relationship({
             ref: 'Language',
             many: false,
@@ -72,49 +111,36 @@ const sourceSchema = {
             },
         }),
 
-        // user: relationship({
-        //     ref: 'User',
-        //     many: false
-        // }),
-        // user: relationship({
-        //     ref: 'User.sources',
-        //     many: false,
-        // }),
-
         createdBy: relationship({
             ref: 'User', 
             many: false,
-            // hooks: {
-            //     validateInput: ({ addValidationError, resolvedData, fieldKey }) => {
-            //         let createdBy = resolvedData[fieldKey];
-            //         console.log(createdBy, 'createdBy')
-            //         console.log(currentUserID, 'currentUserID')
-            //         if (createdBy == undefined || createdBy == null) {
-            //             createdBy = currentUserID
-            //         //   addValidationError(`The email address ${email} provided for the field ${fieldKey} must contain an '@' character`);
-            //         }
-            //       },
-                // dynamic default: if unassigned, find an anonymous user and assign the task to them
-                // async resolveInput ({ context, operation, resolvedData }) {
-                //   if (resolvedData.createdBy === null) {
-      
-                //     // if (context) {
-                //       return { connect: { id: currentUserID } }
-                //     // }
-                //   }
-      
-                //   return resolvedData.createdBy
-                // },
-            //   },
+            hooks: {
+                  resolveInput: ({ resolvedData, context }) => {
+
+                    let { createdBy } = resolvedData;
+                    if (createdBy === null || createdBy === undefined) {
+                      return { connect: { id: context.session.itemId } }
+                    }
+                    return resolvedData.createdBy;
+                  }
+               
+              },
             db: {
                 foreignKey: {
-                map: 'user_id',
+                map: 'created_by',
                 },
             },
             ui: {
-                hideCreate: true
+                createView: {
+                    fieldMode: 'hidden'
+                },
+                listView: {
+                    fieldMode: ({ session }) => {
+                        if(session.data.isAdmin) return 'read'
+                        return 'hidden'
+                    }
+                }
             }
-            
         }),
         
     },

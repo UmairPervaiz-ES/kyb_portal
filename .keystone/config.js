@@ -44,38 +44,46 @@ function isNotAdmin({ session: session2 }) {
     return false;
   return true;
 }
+function isSuperAdmin({ session: session2 }) {
+  if (!session2)
+    return false;
+  if (session2.data.isSuperAdmin == false)
+    return false;
+  return true;
+}
 
 // schemas/User.ts
 var import_fields = require("@keystone-6/core/fields");
 var userSchema = {
-  // WARNING
-  //   for this starter project, anyone can create, query, update and delete anything
-  //   if you want to prevent random people on the internet from accessing your data,
-  //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
   access: {
     operation: {
-      query: ({ session: session2, context, listKey, operation }) => true,
+      query: isAdmin,
       create: isAdmin,
-      update: ({ session: session2, context, listKey, operation }) => true,
-      delete: isAdmin
+      update: isAdmin,
+      delete: isSuperAdmin
     },
     filter: {}
   },
-  // this is the fields for our User list
   fields: {
-    // by adding isRequired, we enforce that every User should have a name
-    //   if no name is provided, an error will be displayed
     name: (0, import_fields.text)({ validation: { isRequired: true } }),
     email: (0, import_fields.text)({
       validation: { isRequired: true },
       // by adding isIndexed: 'unique', we're saying that no user can have the same
-      // email as another user - this may or may not be a good idea for your project
+      // email as another user
       isIndexed: "unique",
       hooks: {
-        validateInput: ({ addValidationError, resolvedData, fieldKey }) => {
+        validateInput: async ({ addValidationError, resolvedData, fieldKey, context }) => {
           const email = resolvedData[fieldKey];
           if (email !== void 0 && email !== null && !email.includes("@")) {
-            addValidationError(`The email address ${email} provided for the field ${fieldKey} must contain an '@' character`);
+            addValidationError(`The email address ${email} provided must contain an '@' character`);
+          }
+          if (email) {
+            const user = await context.db.User.findOne({
+              where: { email: email.toLowerCase() }
+            });
+            if (user) {
+              addValidationError(`The email address ${email} provided already exits`);
+            }
           }
         }
       }
@@ -100,17 +108,26 @@ var userSchema = {
         }
       }
     }),
-    sources: (0, import_fields.relationship)({
-      ref: "Source",
-      many: true
+    isSuperAdmin: (0, import_fields.checkbox)({
+      access: isSuperAdmin,
+      defaultValue: false,
+      ui: {
+        createView: {
+          fieldMode: (args) => isSuperAdmin(args) ? "edit" : "hidden"
+        },
+        itemView: {
+          fieldMode: (args) => isSuperAdmin(args) ? "edit" : "hidden"
+        }
+      }
     }),
-    // we can use this field to see what Posts this User has authored
-    //   more on that in the Post list below
-    //   posts: relationship({ ref: 'Post.author', many: true }),
     createdAt: (0, import_fields.timestamp)({
-      // this sets the timestamp to Date.now() when the user is first created
       defaultValue: { kind: "now" },
-      validation: { isRequired: false }
+      validation: { isRequired: false },
+      ui: {
+        createView: {
+          fieldMode: "hidden"
+        }
+      }
     })
   },
   ui: {
@@ -128,7 +145,12 @@ var sourceTypeSchema = {
     name: (0, import_fields2.text)({ validation: { isRequired: true } }),
     createdAt: (0, import_fields2.timestamp)({
       defaultValue: { kind: "now" },
-      validation: { isRequired: false }
+      validation: { isRequired: false },
+      ui: {
+        createView: {
+          fieldMode: "hidden"
+        }
+      }
     })
   },
   ui: {
@@ -146,7 +168,12 @@ var regionSchema = {
     name: (0, import_fields3.text)({ validation: { isRequired: true } }),
     createdAt: (0, import_fields3.timestamp)({
       defaultValue: { kind: "now" },
-      validation: { isRequired: false }
+      validation: { isRequired: false },
+      ui: {
+        createView: {
+          fieldMode: "hidden"
+        }
+      }
     })
   },
   ui: {
@@ -164,7 +191,12 @@ var languageSchema = {
     name: (0, import_fields4.text)({ validation: { isRequired: true } }),
     createdAt: (0, import_fields4.timestamp)({
       defaultValue: { kind: "now" },
-      validation: { isRequired: false }
+      validation: { isRequired: false },
+      ui: {
+        createView: {
+          fieldMode: "hidden"
+        }
+      }
     })
   },
   // ui: {
@@ -193,7 +225,12 @@ var countrySchema = {
   fields: {
     name: (0, import_fields5.text)({ validation: { isRequired: true } }),
     createdAt: (0, import_fields5.timestamp)({
-      defaultValue: { kind: "now" }
+      defaultValue: { kind: "now" },
+      ui: {
+        createView: {
+          fieldMode: "hidden"
+        }
+      }
     })
   },
   ui: {
@@ -211,15 +248,48 @@ var sourceSchema = {
       query: import_access5.allowAll,
       create: import_access5.allowAll,
       update: import_access5.allowAll,
-      delete: import_access5.allowAll
+      delete: isAdmin
     }
   },
   fields: {
     authority_name: (0, import_fields6.text)({ validation: { isRequired: true } }),
     comment: (0, import_fields6.text)({ validation: { isRequired: true } }),
+    cost: (0, import_fields6.text)({ validation: { isRequired: true } }),
+    coverage: (0, import_fields6.relationship)({
+      ref: "Coverage",
+      many: false,
+      db: {
+        foreignKey: {
+          map: "coverage"
+        }
+      }
+    }),
+    type: (0, import_fields6.relationship)({
+      ref: "Type",
+      many: false,
+      db: {
+        foreignKey: {
+          map: "type"
+        }
+      }
+    }),
+    sourced: (0, import_fields6.relationship)({
+      ref: "Sourced",
+      many: false,
+      db: {
+        foreignKey: {
+          map: "sourced"
+        }
+      }
+    }),
     createdAt: (0, import_fields6.timestamp)({
       // default this timestamp to Date.now() when first created
-      defaultValue: { kind: "now" }
+      defaultValue: { kind: "now" },
+      ui: {
+        createView: {
+          fieldMode: "hidden"
+        }
+      }
     }),
     to_crawler: (0, import_fields6.checkbox)({
       defaultValue: false,
@@ -270,49 +340,129 @@ var sourceSchema = {
         }
       }
     }),
-    // user: relationship({
-    //     ref: 'User',
-    //     many: false
-    // }),
-    // user: relationship({
-    //     ref: 'User.sources',
-    //     many: false,
-    // }),
     createdBy: (0, import_fields6.relationship)({
       ref: "User",
       many: false,
-      // hooks: {
-      //     validateInput: ({ addValidationError, resolvedData, fieldKey }) => {
-      //         let createdBy = resolvedData[fieldKey];
-      //         console.log(createdBy, 'createdBy')
-      //         console.log(currentUserID, 'currentUserID')
-      //         if (createdBy == undefined || createdBy == null) {
-      //             createdBy = currentUserID
-      //         //   addValidationError(`The email address ${email} provided for the field ${fieldKey} must contain an '@' character`);
-      //         }
-      //       },
-      // dynamic default: if unassigned, find an anonymous user and assign the task to them
-      // async resolveInput ({ context, operation, resolvedData }) {
-      //   if (resolvedData.createdBy === null) {
-      //     // if (context) {
-      //       return { connect: { id: currentUserID } }
-      //     // }
-      //   }
-      //   return resolvedData.createdBy
-      // },
-      //   },
+      hooks: {
+        resolveInput: ({ resolvedData, context }) => {
+          let { createdBy } = resolvedData;
+          if (createdBy === null || createdBy === void 0) {
+            return { connect: { id: context.session.itemId } };
+          }
+          return resolvedData.createdBy;
+        }
+      },
       db: {
         foreignKey: {
-          map: "user_id"
+          map: "created_by"
         }
       },
       ui: {
-        hideCreate: true
+        createView: {
+          fieldMode: "hidden"
+        },
+        listView: {
+          fieldMode: ({ session: session2 }) => {
+            if (session2.data.isAdmin)
+              return "read";
+            return "hidden";
+          }
+        }
       }
     })
   }
 };
 var Source_default = sourceSchema;
+
+// schemas/Coverage.ts
+var import_access6 = require("@keystone-6/core/access");
+var import_fields7 = require("@keystone-6/core/fields");
+var coverageSchema = {
+  access: {
+    operation: {
+      query: import_access6.allowAll,
+      create: isAdmin,
+      update: isAdmin,
+      delete: isAdmin
+    }
+  },
+  fields: {
+    name: (0, import_fields7.text)({ validation: { isRequired: true } }),
+    createdAt: (0, import_fields7.timestamp)({
+      defaultValue: { kind: "now" },
+      validation: { isRequired: false },
+      ui: {
+        createView: {
+          fieldMode: "hidden"
+        }
+      }
+    })
+  },
+  ui: {
+    isHidden: isNotAdmin
+  }
+};
+var Coverage_default = coverageSchema;
+
+// schemas/Type.ts
+var import_access7 = require("@keystone-6/core/access");
+var import_fields8 = require("@keystone-6/core/fields");
+var typeSchema = {
+  access: {
+    operation: {
+      query: import_access7.allowAll,
+      create: isAdmin,
+      update: isAdmin,
+      delete: isAdmin
+    }
+  },
+  fields: {
+    name: (0, import_fields8.text)({ validation: { isRequired: true } }),
+    createdAt: (0, import_fields8.timestamp)({
+      defaultValue: { kind: "now" },
+      validation: { isRequired: false },
+      ui: {
+        createView: {
+          fieldMode: "hidden"
+        }
+      }
+    })
+  },
+  ui: {
+    isHidden: isNotAdmin
+  }
+};
+var Type_default = typeSchema;
+
+// schemas/Sourced.ts
+var import_access8 = require("@keystone-6/core/access");
+var import_fields9 = require("@keystone-6/core/fields");
+var sourcedSchema = {
+  access: {
+    operation: {
+      query: import_access8.allowAll,
+      create: isAdmin,
+      update: isAdmin,
+      delete: isAdmin
+    }
+  },
+  fields: {
+    name: (0, import_fields9.text)({ validation: { isRequired: true } }),
+    createdAt: (0, import_fields9.timestamp)({
+      defaultValue: { kind: "now" },
+      validation: { isRequired: false },
+      ui: {
+        createView: {
+          fieldMode: "hidden"
+        }
+      }
+    })
+  },
+  ui: {
+    isHidden: isNotAdmin
+  }
+};
+var Sourced_default = sourcedSchema;
 
 // schema.ts
 var lists = {
@@ -323,7 +473,10 @@ var lists = {
   Region: (0, import_core.list)(Region_default),
   Language: (0, import_core.list)(Language_default),
   Country: (0, import_core.list)(Country_default),
-  Source: (0, import_core.list)(Source_default)
+  Source: (0, import_core.list)(Source_default),
+  Coverage: (0, import_core.list)(Coverage_default),
+  Type: (0, import_core.list)(Type_default),
+  Sourced: (0, import_core.list)(Sourced_default)
   // User: list({
   //   // WARNING
   //   //   for this starter project, anyone can create, query, update and delete anything
@@ -442,7 +595,7 @@ var { withAuth } = (0, import_auth.createAuth)({
   // this is a GraphQL query fragment for fetching what data will be attached to a context.session
   //   this can be helpful for when you are writing your access control functions
   //   you can find out more at https://keystonejs.com/docs/guides/auth-and-access-control
-  sessionData: "id name email isAdmin createdAt",
+  sessionData: "id name email isAdmin isSuperAdmin createdAt",
   secretField: "password",
   // WARNING: remove initFirstItem functionality in production
   //   see https://keystonejs.com/docs/config/auth#init-first-item for more
@@ -452,7 +605,8 @@ var { withAuth } = (0, import_auth.createAuth)({
     //   providing inputs for these fields
     fields: ["name", "email", "password"],
     itemData: {
-      isAdmin: true
+      isAdmin: true,
+      isSuperAdmin: true
     }
     // it uses context.sudo() to do this, which bypasses any access control you might have
     //   you shouldn't use this in production
@@ -468,11 +622,11 @@ var session = (0, import_session.statelessSessions)({
 var keystone_default = withAuth(
   (0, import_core2.config)({
     db: {
-      // we're using sqlite for the fastest startup experience
-      //   for more information on what database might be appropriate for you
-      //   see https://keystonejs.com/docs/guides/choosing-a-database#title
       provider: "postgresql",
       url: process.env.DATABASE_URL
+    },
+    server: {
+      port: 5e3
     },
     lists,
     session

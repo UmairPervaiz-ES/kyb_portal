@@ -12,6 +12,9 @@ import regionSchema from './schemas/Region'
 import languageSchema from './schemas/Language'
 import countrySchema from './schemas/Country'
 import sourceSchema from './schemas/Source'
+import coverageSchema from './schemas/Coverage'
+import typeSchema from './schemas/Type'
+import sourcedSchema from './schemas/Sourced'
 
 export const lists: Lists = {
   User: list(userSchema),
@@ -22,6 +25,9 @@ export const lists: Lists = {
   Language: list(languageSchema),
   Country: list(countrySchema),
   Source: list(sourceSchema),
+  Coverage: list(coverageSchema),
+  Type: list(typeSchema),
+  Sourced: list(sourcedSchema),
   
   // User: list({
   //   // WARNING

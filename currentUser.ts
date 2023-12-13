@@ -3,7 +3,9 @@ import type { Lists } from '.keystone/types'
 type Session = {
     itemId: string
     data: {
+        id: string
         isAdmin: boolean
+        isSuperAdmin: boolean
         }
     }
     
@@ -59,15 +61,17 @@ export function isNotAdmin ({ session }: { session?: Session }) {
     return true
 }
 
-export function isAdminAndisNotDefaultAdminUser ({ session, item }: { session?: Session, item: Lists.User.Item }) {
+export function isSuperAdmin ({ session}: { session?: Session }){
     if(!session) return false
+    if(session.data.isSuperAdmin == false) return false
+    
+    return true
+}
 
-    if(!session.data.isAdmin) {return false};
+export function isAdminAndisNotDefaultAdminUser ({ session, item }: { session?: Session, item: Lists.User.Item }) {
+    if (!session) return false
+    if(session.data.isAdmin == false ) return false
+    if(session.data.isSuperAdmin == false ) return false
 
-    console.log(session.data, 'sessions.data')
-    console.log(item.id, 'content did')
-
-    if(item.id == 'clq0wowaq0005up6ho5jwvptm' ) {return false};
-
-    return true;
+    return true
 }

@@ -1,9 +1,16 @@
-import { allowAll, denyAll } from '@keystone-6/core/access'
+import { allOperations, allowAll, denyAll } from '@keystone-6/core/access'
 import { text, timestamp } from '@keystone-6/core/fields'
-import { isNotAdmin } from '../currentUser';
+import { isAdmin, isNotAdmin } from '../currentUser';
   
-const regionSchema = {
-    access: allowAll,
+const typeSchema = {
+    access: {
+        operation: {
+            query: allowAll,
+            create: isAdmin,
+            update: isAdmin,
+            delete: isAdmin
+        }
+    },
     fields: {
         name: text({ validation: { isRequired: true } }),
         createdAt: timestamp({
@@ -16,9 +23,10 @@ const regionSchema = {
             },
         }),
     },
+    
     ui: {
-        isHidden: isNotAdmin
+      isHidden: isNotAdmin
     }
 }
 
-export default regionSchema;
+export default typeSchema;
