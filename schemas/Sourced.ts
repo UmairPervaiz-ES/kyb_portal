@@ -1,11 +1,11 @@
 import { allOperations, allowAll, denyAll } from '@keystone-6/core/access'
 import { text, timestamp } from '@keystone-6/core/fields'
-import { isAdmin, isNotAdmin } from '../currentUser';
+import { hasSession, isAdmin, isNotAdmin } from '../currentUser';
   
 const sourcedSchema = {
     access: {
         operation: {
-            query: allowAll,
+            query: hasSession,
             create: isAdmin,
             update: isAdmin,
             delete: isAdmin

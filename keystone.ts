@@ -12,9 +12,6 @@ export default withAuth(
       provider: 'postgresql',
       url: process.env.DATABASE_URL,
     },
-    server: {
-      port: 5000
-    },
     lists,
     session,
   })

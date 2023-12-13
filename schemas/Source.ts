@@ -1,13 +1,13 @@
 import { allowAll, denyAll } from '@keystone-6/core/access'
 import { text, checkbox, timestamp, select, relationship } from '@keystone-6/core/fields'
-import { isAdmin, isNotAdmin } from '../currentUser'
+import { hasSession, isAdmin, isNotAdmin } from '../currentUser'
   
 const sourceSchema = {
     access: {
         operation: {
-            query: allowAll,
-            create: allowAll,
-            update: allowAll,
+            query: hasSession,
+            create: hasSession,
+            update: hasSession,
             delete: isAdmin
         }
     },

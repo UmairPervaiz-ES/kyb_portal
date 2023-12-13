@@ -30,6 +30,9 @@ var import_core2 = require("@keystone-6/core");
 var import_core = require("@keystone-6/core");
 
 // currentUser.ts
+function hasSession({ session: session2 }) {
+  return Boolean(session2);
+}
 function isAdmin({ session: session2 }) {
   if (!session2)
     return false;
@@ -137,10 +140,9 @@ var userSchema = {
 var User_default = userSchema;
 
 // schemas/SourceType.ts
-var import_access = require("@keystone-6/core/access");
 var import_fields2 = require("@keystone-6/core/fields");
 var sourceTypeSchema = {
-  access: import_access.allowAll,
+  access: hasSession,
   fields: {
     name: (0, import_fields2.text)({ validation: { isRequired: true } }),
     createdAt: (0, import_fields2.timestamp)({
@@ -160,10 +162,9 @@ var sourceTypeSchema = {
 var SourceType_default = sourceTypeSchema;
 
 // schemas/Region.ts
-var import_access2 = require("@keystone-6/core/access");
 var import_fields3 = require("@keystone-6/core/fields");
 var regionSchema = {
-  access: import_access2.allowAll,
+  access: hasSession,
   fields: {
     name: (0, import_fields3.text)({ validation: { isRequired: true } }),
     createdAt: (0, import_fields3.timestamp)({
@@ -183,10 +184,9 @@ var regionSchema = {
 var Region_default = regionSchema;
 
 // schemas/Language.ts
-var import_access3 = require("@keystone-6/core/access");
 var import_fields4 = require("@keystone-6/core/fields");
 var languageSchema = {
-  access: import_access3.allowAll,
+  access: hasSession,
   fields: {
     name: (0, import_fields4.text)({ validation: { isRequired: true } }),
     createdAt: (0, import_fields4.timestamp)({
@@ -218,10 +218,9 @@ var languageSchema = {
 var Language_default = languageSchema;
 
 // schemas/Country.ts
-var import_access4 = require("@keystone-6/core/access");
 var import_fields5 = require("@keystone-6/core/fields");
 var countrySchema = {
-  access: import_access4.allowAll,
+  access: hasSession,
   fields: {
     name: (0, import_fields5.text)({ validation: { isRequired: true } }),
     createdAt: (0, import_fields5.timestamp)({
@@ -240,14 +239,13 @@ var countrySchema = {
 var Country_default = countrySchema;
 
 // schemas/Source.ts
-var import_access5 = require("@keystone-6/core/access");
 var import_fields6 = require("@keystone-6/core/fields");
 var sourceSchema = {
   access: {
     operation: {
-      query: import_access5.allowAll,
-      create: import_access5.allowAll,
-      update: import_access5.allowAll,
+      query: hasSession,
+      create: hasSession,
+      update: hasSession,
       delete: isAdmin
     }
   },
@@ -375,12 +373,11 @@ var sourceSchema = {
 var Source_default = sourceSchema;
 
 // schemas/Coverage.ts
-var import_access6 = require("@keystone-6/core/access");
 var import_fields7 = require("@keystone-6/core/fields");
 var coverageSchema = {
   access: {
     operation: {
-      query: import_access6.allowAll,
+      query: hasSession,
       create: isAdmin,
       update: isAdmin,
       delete: isAdmin
@@ -405,12 +402,11 @@ var coverageSchema = {
 var Coverage_default = coverageSchema;
 
 // schemas/Type.ts
-var import_access7 = require("@keystone-6/core/access");
 var import_fields8 = require("@keystone-6/core/fields");
 var typeSchema = {
   access: {
     operation: {
-      query: import_access7.allowAll,
+      query: hasSession,
       create: isAdmin,
       update: isAdmin,
       delete: isAdmin
@@ -435,12 +431,11 @@ var typeSchema = {
 var Type_default = typeSchema;
 
 // schemas/Sourced.ts
-var import_access8 = require("@keystone-6/core/access");
 var import_fields9 = require("@keystone-6/core/fields");
 var sourcedSchema = {
   access: {
     operation: {
-      query: import_access8.allowAll,
+      query: hasSession,
       create: isAdmin,
       update: isAdmin,
       delete: isAdmin
@@ -624,9 +619,6 @@ var keystone_default = withAuth(
     db: {
       provider: "postgresql",
       url: process.env.DATABASE_URL
-    },
-    server: {
-      port: 5e3
     },
     lists,
     session
