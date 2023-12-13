@@ -1,5 +1,5 @@
 import { allowAll, denyAll } from '@keystone-6/core/access';
-import { isAdmin, isNotAdmin, isAdminAndisNotDefaultAdminUser, isSuperAdmin } from '../currentUser'
+import { isAdmin, isNotAdmin, isAdminAndisNotDefaultAdminUser, isSuperAdmin, hasSession } from '../currentUser'
 import {
     text,
     relationship,
@@ -13,7 +13,7 @@ import {
 const userSchema = {
     access: {
         operation: {
-            query: isAdmin,
+            query: hasSession,
             create: isAdmin,
             update: isAdmin,
             delete: isSuperAdmin
