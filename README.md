@@ -2,10 +2,16 @@
 
 Welcome to Keystone!
 
-Run
+Get started by installing node modules
 
 ```
-yarn dev
+npm i
+```
+
+Then Run
+
+```
+npm run dev
 ```
 
 To view the config for your new app, look at [./keystone.ts](./keystone.ts)
