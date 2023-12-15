@@ -1,4 +1,5 @@
 import { text, checkbox, timestamp, select, relationship } from '@keystone-6/core/fields'
+import { session } from '../auth';
 import { hasSession, isAdmin, isNotAdmin } from '../currentUser'
   
 const sourceSchema = {
@@ -40,6 +41,9 @@ const sourceSchema = {
                 }
              
             },
+            ui: {
+                hideCreate: true
+            }
         }),
 
         region: relationship({
@@ -60,6 +64,9 @@ const sourceSchema = {
                 }
              
             },
+            ui: {
+                hideCreate: true
+            }
         }),
 
         coverage: relationship({
@@ -80,6 +87,9 @@ const sourceSchema = {
                 }
              
             },
+            ui: {
+                hideCreate: true
+            }
         }),
 
         type: relationship({
@@ -100,6 +110,9 @@ const sourceSchema = {
                 }
              
             },
+            ui: {
+                hideCreate: true
+            }
         }),
 
         source_type: relationship({
@@ -120,6 +133,9 @@ const sourceSchema = {
                 }
              
             },
+            ui: {
+                hideCreate: true
+            }
         }),
 
         language: relationship({
@@ -140,6 +156,9 @@ const sourceSchema = {
                 }
              
             },
+            ui: {
+                hideCreate: true
+            }
         }),
 
         format: relationship({
@@ -160,6 +179,9 @@ const sourceSchema = {
                 }
              
             },
+            ui: {
+                hideCreate: true
+            }
         }),
 
         comment: text({ validation: { isRequired: true } }),
@@ -182,6 +204,9 @@ const sourceSchema = {
                 }
              
             },
+            ui: {
+                hideCreate: true
+            }
         }),
 
         keys: relationship({
