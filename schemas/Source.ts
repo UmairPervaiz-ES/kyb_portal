@@ -31,12 +31,15 @@ const sourceSchema = {
                 },
             },
             hooks: {
-                validateInput: ({ resolvedData, addValidationError }) => {
+                validateInput: ({ resolvedData, operation, addValidationError }) => {
 
-                  let { country } = resolvedData;
-                  if (country === null || country === undefined) {
-                    addValidationError('Please select country');
-                  }
+                    if(operation == 'create'){
+                        let { country } = resolvedData;
+                        if (country === null || country === undefined) {
+                            addValidationError('Please select country');
+                        }
+                    }
+                  
                 }
              
             },
@@ -54,12 +57,14 @@ const sourceSchema = {
                 },
             },
             hooks: {
-                validateInput: ({ resolvedData, addValidationError }) => {
+                validateInput: ({ resolvedData, operation, addValidationError }) => {
 
-                  let { region } = resolvedData;
-                  if (region === null || region === undefined) {
-                    addValidationError('Please select region');
-                  }
+                    if(operation == 'create'){
+                        let { region } = resolvedData;
+                        if (region === null || region === undefined) {
+                            addValidationError('Please select region');
+                        }
+                    }
                 }
              
             },
@@ -77,12 +82,14 @@ const sourceSchema = {
                 }
             },
             hooks: {
-                validateInput: ({ resolvedData, addValidationError }) => {
+                validateInput: ({ resolvedData, operation, addValidationError }) => {
 
-                  let { coverage } = resolvedData;
-                  if (coverage === null || coverage === undefined) {
-                    addValidationError('Please select coverage');
-                  }
+                    if(operation == 'create'){
+                        let { coverage } = resolvedData;
+                        if (coverage === null || coverage === undefined) {
+                            addValidationError('Please select coverage');
+                        }
+                    }
                 }
              
             },
@@ -100,12 +107,14 @@ const sourceSchema = {
                 }
             },
             hooks: {
-                validateInput: ({ resolvedData, addValidationError }) => {
+                validateInput: ({ resolvedData, operation, addValidationError }) => {
 
-                  let { type } = resolvedData;
-                  if (type === null || type === undefined) {
-                    addValidationError('Please select type');
-                  }
+                    if(operation == 'create'){
+                        let { type } = resolvedData;
+                        if (type === null || type === undefined) {
+                            addValidationError('Please select type');
+                        }
+                    }
                 }
              
             },
@@ -123,12 +132,14 @@ const sourceSchema = {
                 },
             },
             hooks: {
-                validateInput: ({ resolvedData, addValidationError }) => {
+                validateInput: ({ resolvedData, operation, addValidationError }) => {
 
-                  let { source_type } = resolvedData;
-                  if (source_type === null || source_type === undefined) {
-                    addValidationError('Please select source type');
-                  }
+                    if(operation == 'create'){
+                        let { source_type } = resolvedData;
+                        if (source_type === null || source_type === undefined) {
+                            addValidationError('Please select source type');
+                        }
+                    }
                 }
              
             },
@@ -146,12 +157,14 @@ const sourceSchema = {
                 },
             },
             hooks: {
-                validateInput: ({ resolvedData, addValidationError }) => {
-
-                  let { lanaguage } = resolvedData;
-                  if (lanaguage === null || lanaguage === undefined) {
-                    addValidationError('Please select lanaguage');
-                  }
+                validateInput: ({ resolvedData, operation, addValidationError }) => {
+                    
+                    if(operation == 'create'){
+                        let { language } = resolvedData;
+                        if (language === null || language === undefined) {
+                            addValidationError('Please select lanaguage');
+                        }
+                    }
                 }
              
             },
@@ -169,12 +182,14 @@ const sourceSchema = {
                 }
             },
             hooks: {
-                validateInput: ({ resolvedData, addValidationError }) => {
+                validateInput: ({ resolvedData, operation, addValidationError }) => {
 
-                  let { format } = resolvedData;
-                  if (format === null || format === undefined) {
-                    addValidationError('Please select format');
-                  }
+                    if(operation == 'create'){
+                        let { format } = resolvedData;
+                        if (format === null || format === undefined) {
+                            addValidationError('Please select format');
+                        }
+                    }
                 }
              
             },
@@ -194,12 +209,14 @@ const sourceSchema = {
                 }
             },
             hooks: {
-                validateInput: ({ resolvedData, addValidationError }) => {
+                validateInput: ({ resolvedData, operation, addValidationError }) => {
 
-                  let { cost } = resolvedData;
-                  if (cost === null || cost === undefined) {
-                    addValidationError('Please select cost');
-                  }
+                    if(operation == 'create'){
+                        let { cost } = resolvedData;
+                        if (cost === null || cost === undefined) {
+                            addValidationError('Please select cost');
+                        }
+                    }
                 }
              
             },
@@ -296,19 +313,6 @@ const sourceSchema = {
         pageSize: 10
       }
     },
-
-    // hooks: {
-    //     resolveInput: async ({ resolvedData }) => {
-    //         // console.log(resolvedData.url, 'resolvedData')
-    //         const formUrl = resolvedData.url
-    //         const url = `<a href="${formUrl}">Link</a>`;
-    //         console.log(url, 'custom link')
-    //         return {
-    //             ...resolvedData,
-    //             url,
-    //         };
-    //     },
-    // },
 }
 
 export default sourceSchema;

@@ -5,8 +5,8 @@ const sourceKeySchema = {
     access: {
         operation: {
             query: hasSession,
-            create: isAdmin,
-            update: isAdmin,
+            create: hasSession,
+            update: hasSession,
             delete: isAdmin
         }
     },
