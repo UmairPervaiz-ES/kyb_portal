@@ -481,3 +481,24 @@ export const languages = [
     { name: "Yoruba"},
     { name: "Zulu"}
 ]
+
+export const source_types = [
+    { name: 'Un-Official' },
+    { name: 'Official' },
+]
+
+export const coverages = [
+    { name: 'Incomplete' },
+    { name: 'Complete' },
+]
+
+export const types = [
+    { name: 'Dump' },
+    { name: 'Portal' },
+    { name: 'API' },
+]
+
+export const costs = [
+    { name: 'Free' },
+    { name: 'Paid' },
+]
