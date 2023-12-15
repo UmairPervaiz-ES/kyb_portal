@@ -12,8 +12,9 @@ import countrySchema from './schemas/Country'
 import sourceSchema from './schemas/Source'
 import coverageSchema from './schemas/Coverage'
 import typeSchema from './schemas/Type'
-import sourcedSchema from './schemas/Sourced'
+import formatSchema from './schemas/Format'
 import sourceKeySchema from './schemas/SourceKey'
+import costSchema from './schemas/Cost'
 
 export const lists: Lists = {
   User: list(userSchema),
@@ -24,6 +25,7 @@ export const lists: Lists = {
   Source: list(sourceSchema),
   Coverage: list(coverageSchema),
   Type: list(typeSchema),
-  Sourced: list(sourcedSchema),
+  Format: list(formatSchema),
   SourceKey: list(sourceKeySchema),
+  Cost: list(costSchema),
 };

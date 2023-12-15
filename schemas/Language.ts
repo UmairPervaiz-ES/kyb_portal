@@ -1,9 +1,16 @@
 import { allowAll, denyAll } from '@keystone-6/core/access'
 import { text, timestamp } from '@keystone-6/core/fields'
-import { hasSession, isNotAdmin } from '../currentUser';
+import { hasSession, isAdmin, isNotAdmin } from '../currentUser';
   
 const languageSchema = {
-    access: hasSession,
+    access: {
+        operation: {
+            query: hasSession,
+            create: isAdmin,
+            update: isAdmin,
+            delete: isAdmin
+        }
+    },
     fields: {
         name: text({ validation: { isRequired: true } }),
         createdAt: timestamp({
@@ -11,6 +18,9 @@ const languageSchema = {
             validation: { isRequired: false },
             ui: {
                 createView: {
+                    fieldMode: 'hidden'
+                },
+                itemView: {
                     fieldMode: 'hidden'
                 }
             },

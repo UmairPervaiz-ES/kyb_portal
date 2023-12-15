@@ -2,7 +2,7 @@ import { allOperations, allowAll, denyAll } from '@keystone-6/core/access'
 import { text, timestamp } from '@keystone-6/core/fields'
 import { hasSession, isAdmin, isNotAdmin } from '../currentUser';
   
-const sourcedSchema = {
+const formatSchema = {
     access: {
         operation: {
             query: hasSession,
@@ -19,6 +19,9 @@ const sourcedSchema = {
             ui: {
                 createView: {
                     fieldMode: 'hidden'
+                },
+                itemView: {
+                    fieldMode: 'hidden'
                 }
             },
         }),
@@ -33,4 +36,4 @@ const sourcedSchema = {
     }
 }
 
-export default sourcedSchema;
+export default formatSchema;

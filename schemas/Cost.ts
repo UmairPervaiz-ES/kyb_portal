@@ -1,7 +1,7 @@
-import { relationship, text, timestamp } from '@keystone-6/core/fields'
+import { text, timestamp } from '@keystone-6/core/fields'
 import { hasSession, isAdmin, isNotAdmin } from '../currentUser';
   
-const sourceKeySchema = {
+const costSchema = {
     access: {
         operation: {
             query: hasSession,
@@ -11,8 +11,7 @@ const sourceKeySchema = {
         }
     },
     fields: {
-        original_key: text({ validation: { isRequired: true } }),
-        map_to: text({ validation: { isRequired: true } }),
+        name: text({ validation: { isRequired: true } }),
         createdAt: timestamp({
             defaultValue: { kind: 'now' }, 
             validation: { isRequired: false },
@@ -26,17 +25,13 @@ const sourceKeySchema = {
             },
         }),
     },
-    
     ui: {
-      isHidden: true,
-    //   createView: isAdmin,
-    labelField: 'original_key',
-    listView: {
-        // initialColumns: ['original_key', /* ... */],
-        initialSort: { field: 'createdAt', direction: 'DESC' },
-        pageSize: 10
+        isHidden: isNotAdmin,
+        listView: {
+          initialSort: { field: 'createdAt', direction: 'DESC' },
+          pageSize: 10
         }
     }
 }
 
-export default sourceKeySchema;
+export default costSchema;

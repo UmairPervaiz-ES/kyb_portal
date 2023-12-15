@@ -12,10 +12,179 @@ const sourceSchema = {
     },
     fields: {
         authority_name: text({ validation: { isRequired: true } }),
-        comment: text({ validation: { isRequired: true } }),
-        cost: text({ validation: { isRequired: true } }),
+        url: text({ 
+            validation: { isRequired: true },
+            ui: {
+                itemView: {
+                    fieldPosition: 'sidebar',
+                },
+                displayMode: 'textarea',
+            },
+        }),
 
-        source_key: relationship({
+        country: relationship({
+            ref: 'Country',
+            many: false,
+            db: {
+                foreignKey: {
+                map: 'country',
+                },
+            },
+            hooks: {
+                validateInput: ({ resolvedData, addValidationError }) => {
+
+                  let { country } = resolvedData;
+                  if (country === null || country === undefined) {
+                    addValidationError('Please select country');
+                  }
+                }
+             
+            },
+        }),
+
+        region: relationship({
+            ref: 'Region',
+            many: false,
+            db: {
+                foreignKey: {
+                map: 'region',
+                },
+            },
+            hooks: {
+                validateInput: ({ resolvedData, addValidationError }) => {
+
+                  let { region } = resolvedData;
+                  if (region === null || region === undefined) {
+                    addValidationError('Please select region');
+                  }
+                }
+             
+            },
+        }),
+
+        coverage: relationship({
+            ref: 'Coverage',
+            many: false,
+            db: {
+                foreignKey: {
+                    map:'coverage'
+                }
+            },
+            hooks: {
+                validateInput: ({ resolvedData, addValidationError }) => {
+
+                  let { coverage } = resolvedData;
+                  if (coverage === null || coverage === undefined) {
+                    addValidationError('Please select coverage');
+                  }
+                }
+             
+            },
+        }),
+
+        type: relationship({
+            ref: 'Type',
+            many: false,
+            db: {
+                foreignKey: {
+                    map:'type'
+                }
+            },
+            hooks: {
+                validateInput: ({ resolvedData, addValidationError }) => {
+
+                  let { type } = resolvedData;
+                  if (type === null || type === undefined) {
+                    addValidationError('Please select type');
+                  }
+                }
+             
+            },
+        }),
+
+        source_type: relationship({
+            ref: 'SourceType',
+            many: false,
+            db: {
+                foreignKey: {
+                map: 'source_type',
+                },
+            },
+            hooks: {
+                validateInput: ({ resolvedData, addValidationError }) => {
+
+                  let { source_type } = resolvedData;
+                  if (source_type === null || source_type === undefined) {
+                    addValidationError('Please select source type');
+                  }
+                }
+             
+            },
+        }),
+
+        language: relationship({
+            ref: 'Language',
+            many: false,
+            db: {
+                foreignKey: {
+                map: 'language',
+                },
+            },
+            hooks: {
+                validateInput: ({ resolvedData, addValidationError }) => {
+
+                  let { lanaguage } = resolvedData;
+                  if (lanaguage === null || lanaguage === undefined) {
+                    addValidationError('Please select lanaguage');
+                  }
+                }
+             
+            },
+        }),
+
+        format: relationship({
+            ref: 'Format',
+            many: false,
+            db: {
+                foreignKey: {
+                    map:'format'
+                }
+            },
+            hooks: {
+                validateInput: ({ resolvedData, addValidationError }) => {
+
+                  let { format } = resolvedData;
+                  if (format === null || format === undefined) {
+                    addValidationError('Please select format');
+                  }
+                }
+             
+            },
+        }),
+
+        comment: text({ validation: { isRequired: true } }),
+
+        cost: relationship({ 
+            ref: 'Cost',
+            many: false,
+            db: {
+                foreignKey: {
+                    map: 'cost'
+                }
+            },
+            hooks: {
+                validateInput: ({ resolvedData, addValidationError }) => {
+
+                  let { cost } = resolvedData;
+                  if (cost === null || cost === undefined) {
+                    addValidationError('Please select cost');
+                  }
+                }
+             
+            },
+        }),
+
+        keys: relationship({
             ref: 'SourceKey',
             many: true,
             ui: {
@@ -30,43 +199,16 @@ const sourceSchema = {
             }
         }),
 
-        coverage: relationship({
-            ref: 'Coverage',
-            many: false,
-            db: {
-                foreignKey: {
-                    map:'coverage'
-                }
-            }
-        }),
-
-        type: relationship({
-            ref: 'Type',
-            many: false,
-            db: {
-                foreignKey: {
-                    map:'type'
-                }
-            }
-        }),
-
-        sourced: relationship({
-            ref: 'Sourced',
-            many: false,
-            db: {
-                foreignKey: {
-                    map:'sourced'
-                }
-            }
-        }),
-
         createdAt: timestamp({
             // default this timestamp to Date.now() when first created
             defaultValue: { kind: 'now' },
             ui: {
                 createView: {
                     fieldMode: 'hidden'
-                }
+                },
+                itemView: {
+                    fieldMode: 'hidden'
+                },
             },
         }),
 
@@ -83,46 +225,6 @@ const sourceSchema = {
                   create: true,
                 },
               }
-        }),
-
-        country: relationship({
-            ref: 'Country',
-            many: false,
-            db: {
-                foreignKey: {
-                map: 'country',
-                },
-            },
-        }),
-
-        region: relationship({
-            ref: 'Region',
-            many: false,
-            db: {
-                foreignKey: {
-                map: 'region',
-                },
-            },
-        }),
-
-        source_type: relationship({
-            ref: 'SourceType',
-            many: false,
-            db: {
-                foreignKey: {
-                map: 'source_type',
-                },
-            },
-        }),
-
-        lanaguage: relationship({
-            ref: 'Language',
-            many: false,
-            db: {
-                foreignKey: {
-                map: 'language',
-                },
-            },
         }),
 
         createdBy: relationship({
@@ -148,6 +250,9 @@ const sourceSchema = {
                 createView: {
                     fieldMode: 'hidden'
                 },
+                itemView: {
+                    fieldMode: 'hidden'
+                },
                 listView: {
                     fieldMode: ({ session }) => {
                         if(session.data.isAdmin) return 'read'
@@ -161,11 +266,25 @@ const sourceSchema = {
 
     ui: {
       listView: {
-        initialColumns: ['authority_name', 'comment', 'to_crawler', 'to_deo', 'country', 'region'],
+        initialColumns: ['authority_name', 'url', 'country', 'region', 'coverage', 'type', 'source_type',
+                         'lanaguage', 'format', 'comment', 'cost', 'keys', 'to_crawler', 'to_deo'],
         initialSort: { field: 'createdAt', direction: 'DESC' },
         pageSize: 10
       }
-    }
+    },
+
+    // hooks: {
+    //     resolveInput: async ({ resolvedData }) => {
+    //         // console.log(resolvedData.url, 'resolvedData')
+    //         const formUrl = resolvedData.url
+    //         const url = `<a href="${formUrl}">Link</a>`;
+    //         console.log(url, 'custom link')
+    //         return {
+    //             ...resolvedData,
+    //             url,
+    //         };
+    //     },
+    // },
 }
 
 export default sourceSchema;
