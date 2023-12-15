@@ -37,15 +37,15 @@ model Region {
 }
 
 model Language {
-  id                    String    @id @default(cuid())
-  name                  String    @default("")
-  createdAt             DateTime? @default(now())
-  from_Source_lanaguage Source[]  @relation("Source_lanaguage")
+  id                   String    @id @default(cuid())
+  name                 String    @default("")
+  createdAt            DateTime? @default(now())
+  from_Source_language Source[]  @relation("Source_language")
 }
 
 model Country {
   id                  String    @id @default(cuid())
-  name                String    @default("")
+  name                String    @unique @default("")
   createdAt           DateTime? @default(now())
   from_Source_country Source[]  @relation("Source_country")
 }
@@ -53,36 +53,39 @@ model Country {
 model Source {
   id             String      @id @default(cuid())
   authority_name String      @default("")
-  comment        String      @default("")
-  cost           String      @default("")
-  source_key     SourceKey[] @relation("Source_source_key")
-  coverage       Coverage?   @relation("Source_coverage", fields: [coverageId], references: [id])
-  coverageId     String?     @map("coverage")
-  type           Type?       @relation("Source_type", fields: [typeId], references: [id])
-  typeId         String?     @map("type")
-  sourced        Sourced?    @relation("Source_sourced", fields: [sourcedId], references: [id])
-  sourcedId      String?     @map("sourced")
-  createdAt      DateTime?   @default(now())
-  to_crawler     Boolean     @default(false) @map("to_crawler")
-  to_deo         Boolean     @default(false) @map("to_deo")
+  url            String      @default("")
   country        Country?    @relation("Source_country", fields: [countryId], references: [id])
   countryId      String?     @map("country")
   region         Region?     @relation("Source_region", fields: [regionId], references: [id])
   regionId       String?     @map("region")
+  coverage       Coverage?   @relation("Source_coverage", fields: [coverageId], references: [id])
+  coverageId     String?     @map("coverage")
+  type           Type?       @relation("Source_type", fields: [typeId], references: [id])
+  typeId         String?     @map("type")
   source_type    SourceType? @relation("Source_source_type", fields: [source_typeId], references: [id])
   source_typeId  String?     @map("source_type")
-  lanaguage      Language?   @relation("Source_lanaguage", fields: [lanaguageId], references: [id])
-  lanaguageId    String?     @map("language")
+  language       Language?   @relation("Source_language", fields: [languageId], references: [id])
+  languageId     String?     @map("language")
+  format         Format?     @relation("Source_format", fields: [formatId], references: [id])
+  formatId       String?     @map("format")
+  comment        String      @default("")
+  cost           Cost?       @relation("Source_cost", fields: [costId], references: [id])
+  costId         String?     @map("cost")
+  keys           SourceKey[] @relation("Source_keys")
+  createdAt      DateTime?   @default(now())
+  to_crawler     Boolean     @default(false) @map("to_crawler")
+  to_deo         Boolean     @default(false) @map("to_deo")
   createdBy      User?       @relation("Source_createdBy", fields: [createdById], references: [id])
   createdById    String?     @map("created_by")
 
-  @@index([coverageId])
-  @@index([typeId])
-  @@index([sourcedId])
   @@index([countryId])
   @@index([regionId])
+  @@index([coverageId])
+  @@index([typeId])
   @@index([source_typeId])
-  @@index([lanaguageId])
+  @@index([languageId])
+  @@index([formatId])
+  @@index([costId])
   @@index([createdById])
 }
 
@@ -100,17 +103,24 @@ model Type {
   from_Source_type Source[]  @relation("Source_type")
 }
 
-model Sourced {
-  id                  String    @id @default(cuid())
-  name                String    @default("")
-  createdAt           DateTime? @default(now())
-  from_Source_sourced Source[]  @relation("Source_sourced")
+model Format {
+  id                 String    @id @default(cuid())
+  name               String    @default("")
+  createdAt          DateTime? @default(now())
+  from_Source_format Source[]  @relation("Source_format")
 }
 
 model SourceKey {
-  id                     String    @id @default(cuid())
-  original_key           String    @default("")
-  map_to                 String    @default("")
-  createdAt              DateTime? @default(now())
-  from_Source_source_key Source[]  @relation("Source_source_key")
+  id               String    @id @default(cuid())
+  original_key     String    @default("")
+  map_to           String    @default("")
+  createdAt        DateTime? @default(now())
+  from_Source_keys Source[]  @relation("Source_keys")
+}
+
+model Cost {
+  id               String    @id @default(cuid())
+  name             String    @default("")
+  createdAt        DateTime? @default(now())
+  from_Source_cost Source[]  @relation("Source_cost")
 }

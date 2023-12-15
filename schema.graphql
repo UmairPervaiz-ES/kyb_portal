@@ -260,6 +260,7 @@ type Country {
 
 input CountryWhereUniqueInput {
   id: ID
+  name: String
 }
 
 input CountryWhereInput {
@@ -295,20 +296,21 @@ input CountryCreateInput {
 type Source {
   id: ID!
   authority_name: String
-  comment: String
-  cost: String
-  source_key(where: SourceKeyWhereInput! = {}, orderBy: [SourceKeyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SourceKeyWhereUniqueInput): [SourceKey!]
-  source_keyCount(where: SourceKeyWhereInput! = {}): Int
+  url: String
+  country: Country
+  region: Region
   coverage: Coverage
   type: Type
-  sourced: Sourced
+  source_type: SourceType
+  language: Language
+  format: Format
+  comment: String
+  cost: Cost
+  keys(where: SourceKeyWhereInput! = {}, orderBy: [SourceKeyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SourceKeyWhereUniqueInput): [SourceKey!]
+  keysCount(where: SourceKeyWhereInput! = {}): Int
   createdAt: DateTime
   to_crawler: Boolean
   to_deo: Boolean
-  country: Country
-  region: Region
-  source_type: SourceType
-  lanaguage: Language
   createdBy: User
 }
 
@@ -322,19 +324,20 @@ input SourceWhereInput {
   NOT: [SourceWhereInput!]
   id: IDFilter
   authority_name: StringFilter
-  comment: StringFilter
-  cost: StringFilter
-  source_key: SourceKeyManyRelationFilter
+  url: StringFilter
+  country: CountryWhereInput
+  region: RegionWhereInput
   coverage: CoverageWhereInput
   type: TypeWhereInput
-  sourced: SourcedWhereInput
+  source_type: SourceTypeWhereInput
+  language: LanguageWhereInput
+  format: FormatWhereInput
+  comment: StringFilter
+  cost: CostWhereInput
+  keys: SourceKeyManyRelationFilter
   createdAt: DateTimeNullableFilter
   to_crawler: BooleanFilter
   to_deo: BooleanFilter
-  country: CountryWhereInput
-  region: RegionWhereInput
-  source_type: SourceTypeWhereInput
-  lanaguage: LanguageWhereInput
   createdBy: UserWhereInput
 }
 
@@ -347,8 +350,8 @@ input SourceKeyManyRelationFilter {
 input SourceOrderByInput {
   id: OrderDirection
   authority_name: OrderDirection
+  url: OrderDirection
   comment: OrderDirection
-  cost: OrderDirection
   createdAt: OrderDirection
   to_crawler: OrderDirection
   to_deo: OrderDirection
@@ -356,45 +359,21 @@ input SourceOrderByInput {
 
 input SourceUpdateInput {
   authority_name: String
-  comment: String
-  cost: String
-  source_key: SourceKeyRelateToManyForUpdateInput
+  url: String
+  country: CountryRelateToOneForUpdateInput
+  region: RegionRelateToOneForUpdateInput
   coverage: CoverageRelateToOneForUpdateInput
   type: TypeRelateToOneForUpdateInput
-  sourced: SourcedRelateToOneForUpdateInput
+  source_type: SourceTypeRelateToOneForUpdateInput
+  language: LanguageRelateToOneForUpdateInput
+  format: FormatRelateToOneForUpdateInput
+  comment: String
+  cost: CostRelateToOneForUpdateInput
+  keys: SourceKeyRelateToManyForUpdateInput
   createdAt: DateTime
   to_crawler: Boolean
   to_deo: Boolean
-  country: CountryRelateToOneForUpdateInput
-  region: RegionRelateToOneForUpdateInput
-  source_type: SourceTypeRelateToOneForUpdateInput
-  lanaguage: LanguageRelateToOneForUpdateInput
   createdBy: UserRelateToOneForUpdateInput
-}
-
-input SourceKeyRelateToManyForUpdateInput {
-  disconnect: [SourceKeyWhereUniqueInput!]
-  set: [SourceKeyWhereUniqueInput!]
-  create: [SourceKeyCreateInput!]
-  connect: [SourceKeyWhereUniqueInput!]
-}
-
-input CoverageRelateToOneForUpdateInput {
-  create: CoverageCreateInput
-  connect: CoverageWhereUniqueInput
-  disconnect: Boolean
-}
-
-input TypeRelateToOneForUpdateInput {
-  create: TypeCreateInput
-  connect: TypeWhereUniqueInput
-  disconnect: Boolean
-}
-
-input SourcedRelateToOneForUpdateInput {
-  create: SourcedCreateInput
-  connect: SourcedWhereUniqueInput
-  disconnect: Boolean
 }
 
 input CountryRelateToOneForUpdateInput {
@@ -406,6 +385,18 @@ input CountryRelateToOneForUpdateInput {
 input RegionRelateToOneForUpdateInput {
   create: RegionCreateInput
   connect: RegionWhereUniqueInput
+  disconnect: Boolean
+}
+
+input CoverageRelateToOneForUpdateInput {
+  create: CoverageCreateInput
+  connect: CoverageWhereUniqueInput
+  disconnect: Boolean
+}
+
+input TypeRelateToOneForUpdateInput {
+  create: TypeCreateInput
+  connect: TypeWhereUniqueInput
   disconnect: Boolean
 }
 
@@ -421,6 +412,25 @@ input LanguageRelateToOneForUpdateInput {
   disconnect: Boolean
 }
 
+input FormatRelateToOneForUpdateInput {
+  create: FormatCreateInput
+  connect: FormatWhereUniqueInput
+  disconnect: Boolean
+}
+
+input CostRelateToOneForUpdateInput {
+  create: CostCreateInput
+  connect: CostWhereUniqueInput
+  disconnect: Boolean
+}
+
+input SourceKeyRelateToManyForUpdateInput {
+  disconnect: [SourceKeyWhereUniqueInput!]
+  set: [SourceKeyWhereUniqueInput!]
+  create: [SourceKeyCreateInput!]
+  connect: [SourceKeyWhereUniqueInput!]
+}
+
 input UserRelateToOneForUpdateInput {
   create: UserCreateInput
   connect: UserWhereUniqueInput
@@ -434,40 +444,21 @@ input SourceUpdateArgs {
 
 input SourceCreateInput {
   authority_name: String
-  comment: String
-  cost: String
-  source_key: SourceKeyRelateToManyForCreateInput
+  url: String
+  country: CountryRelateToOneForCreateInput
+  region: RegionRelateToOneForCreateInput
   coverage: CoverageRelateToOneForCreateInput
   type: TypeRelateToOneForCreateInput
-  sourced: SourcedRelateToOneForCreateInput
+  source_type: SourceTypeRelateToOneForCreateInput
+  language: LanguageRelateToOneForCreateInput
+  format: FormatRelateToOneForCreateInput
+  comment: String
+  cost: CostRelateToOneForCreateInput
+  keys: SourceKeyRelateToManyForCreateInput
   createdAt: DateTime
   to_crawler: Boolean
   to_deo: Boolean! = false
-  country: CountryRelateToOneForCreateInput
-  region: RegionRelateToOneForCreateInput
-  source_type: SourceTypeRelateToOneForCreateInput
-  lanaguage: LanguageRelateToOneForCreateInput
   createdBy: UserRelateToOneForCreateInput
-}
-
-input SourceKeyRelateToManyForCreateInput {
-  create: [SourceKeyCreateInput!]
-  connect: [SourceKeyWhereUniqueInput!]
-}
-
-input CoverageRelateToOneForCreateInput {
-  create: CoverageCreateInput
-  connect: CoverageWhereUniqueInput
-}
-
-input TypeRelateToOneForCreateInput {
-  create: TypeCreateInput
-  connect: TypeWhereUniqueInput
-}
-
-input SourcedRelateToOneForCreateInput {
-  create: SourcedCreateInput
-  connect: SourcedWhereUniqueInput
 }
 
 input CountryRelateToOneForCreateInput {
@@ -480,6 +471,16 @@ input RegionRelateToOneForCreateInput {
   connect: RegionWhereUniqueInput
 }
 
+input CoverageRelateToOneForCreateInput {
+  create: CoverageCreateInput
+  connect: CoverageWhereUniqueInput
+}
+
+input TypeRelateToOneForCreateInput {
+  create: TypeCreateInput
+  connect: TypeWhereUniqueInput
+}
+
 input SourceTypeRelateToOneForCreateInput {
   create: SourceTypeCreateInput
   connect: SourceTypeWhereUniqueInput
@@ -488,6 +489,21 @@ input SourceTypeRelateToOneForCreateInput {
 input LanguageRelateToOneForCreateInput {
   create: LanguageCreateInput
   connect: LanguageWhereUniqueInput
+}
+
+input FormatRelateToOneForCreateInput {
+  create: FormatCreateInput
+  connect: FormatWhereUniqueInput
+}
+
+input CostRelateToOneForCreateInput {
+  create: CostCreateInput
+  connect: CostWhereUniqueInput
+}
+
+input SourceKeyRelateToManyForCreateInput {
+  create: [SourceKeyCreateInput!]
+  connect: [SourceKeyWhereUniqueInput!]
 }
 
 input UserRelateToOneForCreateInput {
@@ -575,42 +591,42 @@ input TypeCreateInput {
   createdAt: DateTime
 }
 
-type Sourced {
+type Format {
   id: ID!
   name: String
   createdAt: DateTime
 }
 
-input SourcedWhereUniqueInput {
+input FormatWhereUniqueInput {
   id: ID
 }
 
-input SourcedWhereInput {
-  AND: [SourcedWhereInput!]
-  OR: [SourcedWhereInput!]
-  NOT: [SourcedWhereInput!]
+input FormatWhereInput {
+  AND: [FormatWhereInput!]
+  OR: [FormatWhereInput!]
+  NOT: [FormatWhereInput!]
   id: IDFilter
   name: StringFilter
   createdAt: DateTimeNullableFilter
 }
 
-input SourcedOrderByInput {
+input FormatOrderByInput {
   id: OrderDirection
   name: OrderDirection
   createdAt: OrderDirection
 }
 
-input SourcedUpdateInput {
+input FormatUpdateInput {
   name: String
   createdAt: DateTime
 }
 
-input SourcedUpdateArgs {
-  where: SourcedWhereUniqueInput!
-  data: SourcedUpdateInput!
+input FormatUpdateArgs {
+  where: FormatWhereUniqueInput!
+  data: FormatUpdateInput!
 }
 
-input SourcedCreateInput {
+input FormatCreateInput {
   name: String
   createdAt: DateTime
 }
@@ -657,6 +673,46 @@ input SourceKeyUpdateArgs {
 input SourceKeyCreateInput {
   original_key: String
   map_to: String
+  createdAt: DateTime
+}
+
+type Cost {
+  id: ID!
+  name: String
+  createdAt: DateTime
+}
+
+input CostWhereUniqueInput {
+  id: ID
+}
+
+input CostWhereInput {
+  AND: [CostWhereInput!]
+  OR: [CostWhereInput!]
+  NOT: [CostWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  createdAt: DateTimeNullableFilter
+}
+
+input CostOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  createdAt: OrderDirection
+}
+
+input CostUpdateInput {
+  name: String
+  createdAt: DateTime
+}
+
+input CostUpdateArgs {
+  where: CostWhereUniqueInput!
+  data: CostUpdateInput!
+}
+
+input CostCreateInput {
+  name: String
   createdAt: DateTime
 }
 
@@ -714,18 +770,24 @@ type Mutation {
   updateTypes(data: [TypeUpdateArgs!]!): [Type]
   deleteType(where: TypeWhereUniqueInput!): Type
   deleteTypes(where: [TypeWhereUniqueInput!]!): [Type]
-  createSourced(data: SourcedCreateInput!): Sourced
-  createSourceds(data: [SourcedCreateInput!]!): [Sourced]
-  updateSourced(where: SourcedWhereUniqueInput!, data: SourcedUpdateInput!): Sourced
-  updateSourceds(data: [SourcedUpdateArgs!]!): [Sourced]
-  deleteSourced(where: SourcedWhereUniqueInput!): Sourced
-  deleteSourceds(where: [SourcedWhereUniqueInput!]!): [Sourced]
+  createFormat(data: FormatCreateInput!): Format
+  createFormats(data: [FormatCreateInput!]!): [Format]
+  updateFormat(where: FormatWhereUniqueInput!, data: FormatUpdateInput!): Format
+  updateFormats(data: [FormatUpdateArgs!]!): [Format]
+  deleteFormat(where: FormatWhereUniqueInput!): Format
+  deleteFormats(where: [FormatWhereUniqueInput!]!): [Format]
   createSourceKey(data: SourceKeyCreateInput!): SourceKey
   createSourceKeys(data: [SourceKeyCreateInput!]!): [SourceKey]
   updateSourceKey(where: SourceKeyWhereUniqueInput!, data: SourceKeyUpdateInput!): SourceKey
   updateSourceKeys(data: [SourceKeyUpdateArgs!]!): [SourceKey]
   deleteSourceKey(where: SourceKeyWhereUniqueInput!): SourceKey
   deleteSourceKeys(where: [SourceKeyWhereUniqueInput!]!): [SourceKey]
+  createCost(data: CostCreateInput!): Cost
+  createCosts(data: [CostCreateInput!]!): [Cost]
+  updateCost(where: CostWhereUniqueInput!, data: CostUpdateInput!): Cost
+  updateCosts(data: [CostUpdateArgs!]!): [Cost]
+  deleteCost(where: CostWhereUniqueInput!): Cost
+  deleteCosts(where: [CostWhereUniqueInput!]!): [Cost]
   endSession: Boolean!
   authenticateUserWithPassword(email: String!, password: String!): UserAuthenticationWithPasswordResult
   createInitialUser(data: CreateInitialUserInput!): UserAuthenticationWithPasswordSuccess!
@@ -773,12 +835,15 @@ type Query {
   types(where: TypeWhereInput! = {}, orderBy: [TypeOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TypeWhereUniqueInput): [Type!]
   type(where: TypeWhereUniqueInput!): Type
   typesCount(where: TypeWhereInput! = {}): Int
-  sourceds(where: SourcedWhereInput! = {}, orderBy: [SourcedOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SourcedWhereUniqueInput): [Sourced!]
-  sourced(where: SourcedWhereUniqueInput!): Sourced
-  sourcedsCount(where: SourcedWhereInput! = {}): Int
+  formats(where: FormatWhereInput! = {}, orderBy: [FormatOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: FormatWhereUniqueInput): [Format!]
+  format(where: FormatWhereUniqueInput!): Format
+  formatsCount(where: FormatWhereInput! = {}): Int
   sourceKeys(where: SourceKeyWhereInput! = {}, orderBy: [SourceKeyOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: SourceKeyWhereUniqueInput): [SourceKey!]
   sourceKey(where: SourceKeyWhereUniqueInput!): SourceKey
   sourceKeysCount(where: SourceKeyWhereInput! = {}): Int
+  costs(where: CostWhereInput! = {}, orderBy: [CostOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: CostWhereUniqueInput): [Cost!]
+  cost(where: CostWhereUniqueInput!): Cost
+  costsCount(where: CostWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }

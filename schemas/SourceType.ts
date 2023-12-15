@@ -19,6 +19,9 @@ const sourceTypeSchema = {
             ui: {
                 createView: {
                     fieldMode: 'hidden'
+                },
+                itemView: {
+                    fieldMode: 'hidden'
                 }
             },
         }),

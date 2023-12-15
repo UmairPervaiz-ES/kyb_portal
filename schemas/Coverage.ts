@@ -19,6 +19,9 @@ const coverageSchema = {
             ui: {
                 createView: {
                     fieldMode: 'hidden'
+                },
+                itemView: {
+                    fieldMode: 'hidden'
                 }
             },
         }),
