@@ -1,5 +1,5 @@
 import { getContext } from '@keystone-6/core/context'
-import { countires, regions, formats, languages } from './sample-data'
+import { countires, regions, formats, languages, source_types, coverages, types, costs } from './sample-data'
 import config from './keystone'
 import * as PrismaModule from './node_modules/.prisma/client'
 
@@ -29,6 +29,30 @@ async function main () {
     console.log(`Adding language: ${language.name}`)
       await context.db.Language.createOne({
         data: language,
+      })
+  }
+  for( const source_type of source_types ){
+    console.log(`Adding format: ${source_type.name}`)
+      await context.db.SourceType.createOne({
+        data: source_type,
+      })
+  }
+  for( const coverage of coverages ){
+    console.log(`Adding format: ${coverage.name}`)
+      await context.db.Coverage.createOne({
+        data: coverage,
+      })
+  }
+  for( const type of types ){
+    console.log(`Adding format: ${type.name}`)
+      await context.db.Type.createOne({
+        data: type,
+      })
+  }
+  for( const cost of costs ){
+    console.log(`Adding format: ${cost.name}`)
+      await context.db.Cost.createOne({
+        data: cost,
       })
   }
 
