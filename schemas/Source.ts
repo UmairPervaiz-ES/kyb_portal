@@ -1,5 +1,4 @@
 import { text, checkbox, timestamp, select, relationship } from '@keystone-6/core/fields'
-import { session } from '../auth';
 import { hasSession, isAdmin, isNotAdmin } from '../currentUser'
   
 const sourceSchema = {
