@@ -2,7 +2,7 @@
 
 Welcome to Keystone!
 
-Get started by installing node_modules
+Get started by installing node modules
 
 ```
 npm i
