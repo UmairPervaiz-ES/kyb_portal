@@ -15,6 +15,7 @@ import typeSchema from './schemas/Type'
 import formatSchema from './schemas/Format'
 import sourceKeySchema from './schemas/SourceKey'
 import costSchema from './schemas/Cost'
+import logSchema from './schemas/Log'
 
 export const lists: Lists = {
   User: list(userSchema),
@@ -28,4 +29,5 @@ export const lists: Lists = {
   Format: list(formatSchema),
   SourceKey: list(sourceKeySchema),
   Cost: list(costSchema),
+  Log: list(logSchema),
 };

@@ -716,6 +716,65 @@ input CostCreateInput {
   createdAt: DateTime
 }
 
+type Log {
+  id: ID!
+  operation: String
+  previous_data: String
+  updated_data: String
+  updated_values: String
+  updated_by: User
+  createdAt: DateTime
+}
+
+input LogWhereUniqueInput {
+  id: ID
+}
+
+input LogWhereInput {
+  AND: [LogWhereInput!]
+  OR: [LogWhereInput!]
+  NOT: [LogWhereInput!]
+  id: IDFilter
+  operation: StringFilter
+  previous_data: StringFilter
+  updated_data: StringFilter
+  updated_values: StringFilter
+  updated_by: UserWhereInput
+  createdAt: DateTimeNullableFilter
+}
+
+input LogOrderByInput {
+  id: OrderDirection
+  operation: OrderDirection
+  previous_data: OrderDirection
+  updated_data: OrderDirection
+  updated_values: OrderDirection
+  createdAt: OrderDirection
+}
+
+input LogUpdateInput {
+  operation: String
+  previous_data: String
+  updated_data: String
+  updated_values: String
+  updated_by: UserRelateToOneForUpdateInput
+  createdAt: DateTime
+}
+
+input LogUpdateArgs {
+  where: LogWhereUniqueInput!
+  data: LogUpdateInput!
+}
+
+input LogCreateInput {
+  operation: String
+  previous_data: String
+  updated_data: String
+  updated_values: String
+  updated_by: UserRelateToOneForCreateInput
+  createdAt: DateTime
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -788,6 +847,12 @@ type Mutation {
   updateCosts(data: [CostUpdateArgs!]!): [Cost]
   deleteCost(where: CostWhereUniqueInput!): Cost
   deleteCosts(where: [CostWhereUniqueInput!]!): [Cost]
+  createLog(data: LogCreateInput!): Log
+  createLogs(data: [LogCreateInput!]!): [Log]
+  updateLog(where: LogWhereUniqueInput!, data: LogUpdateInput!): Log
+  updateLogs(data: [LogUpdateArgs!]!): [Log]
+  deleteLog(where: LogWhereUniqueInput!): Log
+  deleteLogs(where: [LogWhereUniqueInput!]!): [Log]
   endSession: Boolean!
   authenticateUserWithPassword(email: String!, password: String!): UserAuthenticationWithPasswordResult
   createInitialUser(data: CreateInitialUserInput!): UserAuthenticationWithPasswordSuccess!
@@ -844,6 +909,9 @@ type Query {
   costs(where: CostWhereInput! = {}, orderBy: [CostOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: CostWhereUniqueInput): [Cost!]
   cost(where: CostWhereUniqueInput!): Cost
   costsCount(where: CostWhereInput! = {}): Int
+  logs(where: LogWhereInput! = {}, orderBy: [LogOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: LogWhereUniqueInput): [Log!]
+  log(where: LogWhereUniqueInput!): Log
+  logsCount(where: LogWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }

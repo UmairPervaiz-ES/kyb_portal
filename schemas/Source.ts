@@ -10,6 +10,31 @@ const sourceSchema = {
             delete: isAdmin
         }
     },
+    hooks: {
+        afterOperation: async ({ listKey, operation, inputData, originalItem, item, resolvedData, context }: {
+            listKey: string;
+            operation: 'create' | 'update' | 'delete'; 
+            inputData: any;
+            originalItem: any;
+            item: any;
+            resolvedData: any;
+            context: any;
+          }) => 
+        {
+            await context.db.Log.createOne({
+                data: {
+                    operation: operation ?? 'null',
+                    previous_data: JSON.stringify(originalItem) ?? 'null',
+                    updated_data: JSON.stringify(item) ?? 'null',
+                    updated_values: JSON.stringify(inputData) ?? 'null',
+                    updated_by: {connect: {
+                        id: context.session.itemId // Replace this ID with the actual user ID
+                        }}
+                },
+                query: 'id operation previous_data updated_data updated_values updated_by',
+            })
+          },
+    },
     fields: {
         authority_name: text({ validation: { isRequired: true } }),
         url: text({ 
@@ -162,7 +187,7 @@ const sourceSchema = {
                     if(operation == 'create'){
                         let { language } = resolvedData;
                         if (language === null || language === undefined) {
-                            addValidationError('Please select lanaguage');
+                            addValidationError('Please select language');
                         }
                     }
                 }
@@ -198,7 +223,7 @@ const sourceSchema = {
             }
         }),
 
-        comment: text({ validation: { isRequired: true } }),
+        comment: text(),
 
         cost: relationship({ 
             ref: 'Cost',

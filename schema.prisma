@@ -20,6 +20,7 @@ model User {
   isSuperAdmin          Boolean   @default(false)
   createdAt             DateTime? @default(now())
   from_Source_createdBy Source[]  @relation("Source_createdBy")
+  from_Log_updated_by   Log[]     @relation("Log_updated_by")
 }
 
 model SourceType {
@@ -123,4 +124,17 @@ model Cost {
   name             String    @default("")
   createdAt        DateTime? @default(now())
   from_Source_cost Source[]  @relation("Source_cost")
+}
+
+model Log {
+  id             String    @id @default(cuid())
+  operation      String    @default("")
+  previous_data  String    @default("")
+  updated_data   String    @default("")
+  updated_values String    @default("")
+  updated_by     User?     @relation("Log_updated_by", fields: [updated_byId], references: [id])
+  updated_byId   String?   @map("updated_by")
+  createdAt      DateTime? @default(now())
+
+  @@index([updated_byId])
 }
